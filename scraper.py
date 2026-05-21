@@ -7,57 +7,14 @@ SINGAPORE_PLACE_ID = 6734
 # Each group maps to its iNaturalist taxon_id.
 # Giving under-represented groups more slots in the wheel.
 TAXON_GROUPS = [
-    # ── Crustaceans ───────────────────────────────
-    {"name": "Crustacea",        "taxon_id": 85493,  "weight": 8,  "phylum": "Arthropoda"},
-    {"name": "Brachyura",        "taxon_id": 47187,  "weight": 7,  "phylum": "Arthropoda"},
-    {"name": "Anomura",          "taxon_id": 47187,  "weight": 5,  "phylum": "Arthropoda"},
-    {"name": "Amphipoda",        "taxon_id": 47544,  "weight": 4,  "phylum": "Arthropoda"},
-    {"name": "Isopoda",          "taxon_id": 47210,  "weight": 4,  "phylum": "Arthropoda"},
-    {"name": "Copepoda",         "taxon_id": 48537,  "weight": 3,  "phylum": "Arthropoda"},
-
-    # ── Echinoderms ───────────────────────────────
-    {"name": "Echinodermata",    "taxon_id": 47549,  "weight": 8,  "phylum": "Echinodermata"},
-    {"name": "Asteroidea",       "taxon_id": 47668,  "weight": 6,  "phylum": "Echinodermata"},
-    {"name": "Holothuroidea",    "taxon_id": 47713,  "weight": 6,  "phylum": "Echinodermata"},
-    {"name": "Echinoidea",       "taxon_id": 47664,  "weight": 6,  "phylum": "Echinodermata"},
-    {"name": "Ophiuroidea",      "taxon_id": 47670,  "weight": 5,  "phylum": "Echinodermata"},
-    {"name": "Crinoidea",        "taxon_id": 47667,  "weight": 4,  "phylum": "Echinodermata"},
-
-    # ── Molluscs ──────────────────────────────────
-    {"name": "Mollusca",         "taxon_id": 47115,  "weight": 8,  "phylum": "Mollusca"},
-    {"name": "Gastropoda",       "taxon_id": 47114,  "weight": 6,  "phylum": "Mollusca"},
-    {"name": "Bivalvia",         "taxon_id": 47105,  "weight": 5,  "phylum": "Mollusca"},
-    {"name": "Cephalopoda",      "taxon_id": 47459,  "weight": 7,  "phylum": "Mollusca"},
-    {"name": "Polyplacophora",   "taxon_id": 47113,  "weight": 3,  "phylum": "Mollusca"},
-
-    # ── Worms ─────────────────────────────────────
-    {"name": "Annelida",         "taxon_id": 47491,  "weight": 5,  "phylum": "Annelida"},
-    {"name": "Polychaeta",       "taxon_id": 47927,  "weight": 5,  "phylum": "Annelida"},
-    {"name": "Platyhelminthes",  "taxon_id": 47928,  "weight": 4,  "phylum": "Platyhelminthes"},
-    {"name": "Nemertea",         "taxon_id": 47930,  "weight": 3,  "phylum": "Nemertea"},
-
-    # ── Cnidarians ────────────────────────────────
-    {"name": "Cnidaria",         "taxon_id": 47534,  "weight": 6,  "phylum": "Cnidaria"},
-    {"name": "Anthozoa",         "taxon_id": 47535,  "weight": 6,  "phylum": "Cnidaria"},
-    {"name": "Scyphozoa",        "taxon_id": 47537,  "weight": 5,  "phylum": "Cnidaria"},
-    {"name": "Hydrozoa",         "taxon_id": 47536,  "weight": 4,  "phylum": "Cnidaria"},
-
-    # ── Arachnids ─────────────────────────────────
-    {"name": "Arachnida",        "taxon_id": 47119,  "weight": 5,  "phylum": "Arthropoda"},
-    {"name": "Araneae",          "taxon_id": 47118,  "weight": 5,  "phylum": "Arthropoda"},
-    {"name": "Acari",            "taxon_id": 47119,  "weight": 3,  "phylum": "Arthropoda"},
-
-    # ── Sponges ───────────────────────────────────
-    {"name": "Porifera",         "taxon_id": 48824,  "weight": 4,  "phylum": "Porifera"},
-
-    # ── Tunicates ─────────────────────────────────
-    {"name": "Ascidiacea",       "taxon_id": 47748,  "weight": 4,  "phylum": "Chordata"},
-
-    # ── Insects (downweighted) ────────────────────
-    {"name": "Insecta",          "taxon_id": 47158,  "weight": 2,  "phylum": "Arthropoda"},
-
-    # ── Vertebrates (downweighted) ────────────────
-    {"name": "Chordata",         "taxon_id": 2,      "weight": 2,  "phylum": "Chordata"},
+    {"name": "Echinodermata", "taxon_id": 47549,  "weight": 8},
+    {"name": "Crustacea",     "taxon_id": 85493,  "weight": 6},
+    {"name": "Mollusca",      "taxon_id": 47115,  "weight": 6},
+    {"name": "Arachnida",     "taxon_id": 47119,  "weight": 3},
+    {"name": "Cnidaria",      "taxon_id": 47534,  "weight": 8},
+    {"name": "Annelida",      "taxon_id": 47491,  "weight": 8},
+    {"name": "Insecta",       "taxon_id": 47158,  "weight": 2},  # downweighted
+    {"name": "Chordata",      "taxon_id": 2,      "weight": 2},  # downweighted
 ]
 
 def get_taxonomy(taxon_id):
@@ -185,19 +142,6 @@ def get_wikipedia_extras(scientific_name, wikipedia_url=""):
     habitat_index = best_section_index(sections, habitat_preference)
     feeding_index = best_section_index(sections, feeding_preference)
 
-    for sec in sections:
-        heading = sec.get("line", "").lower().strip()
-        anchor  = sec.get("anchor", "").lower().strip()
-        combined = heading + " " + anchor
-
-        if habitat_index is None:
-            if any(h == heading or h == anchor for h in habitat_headings):
-                habitat_index = sec.get("index")
-
-        if feeding_index is None:
-            if any(h == heading or h == anchor for h in feeding_headings):
-                feeding_index = sec.get("index")
-
     # ── STEP 4: fetch each matched section ────────────────────────────
     def fetch_section(page_title, section_index):
         try:
@@ -303,7 +247,6 @@ def build_observation(obs):
         "habitat":         extras["habitat"],
         "feeding":         extras["feeding"],
     }
-
 def fetch_singapore_animals(query="", page=1, per_page=20, phyla_filter=None):
     params = {
         "place_id":     SINGAPORE_PLACE_ID,
@@ -351,13 +294,10 @@ def fetch_random_animal(phyla_filter=None):
     for group in TAXON_GROUPS:
         pool.extend([group] * group["weight"])
 
-    # Filter by phylum using the explicit phylum tag on each group
     if phyla_filter:
-        filtered = [g for g in pool if g["phylum"] in phyla_filter]
-        if filtered:
-            pool = filtered
-        # if nothing matched at all, leave pool unfiltered rather than
-        # returning None immediately — the per-entry check below still applies
+        filtered_pool = [g for g in pool if g["name"] in phyla_filter]
+        if filtered_pool:
+            pool = filtered_pool
 
     for _ in range(15):
         group = random.choice(pool)
