@@ -131,6 +131,8 @@ function quickSelect(mode, event) {
     PHYLA.filter(p =>  p.vertebrate).forEach(p => selectedPhyla.add(p.name));
   } else if (mode === "invertebrates") {
     PHYLA.filter(p => !p.vertebrate).forEach(p => selectedPhyla.add(p.name));
+  } else if (mode === "all") {
+    PHYLA.filter(p => p).forEach(p => selectedPhyla.add(p.name));
   }
   document.querySelectorAll("#phyla-grid input[type=checkbox]").forEach(cb => {
     cb.checked = selectedPhyla.has(cb.value);
