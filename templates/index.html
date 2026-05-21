@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Singapore Animal Explorer</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header>
+    <h1>Singapore Animal Explorer</h1>
+    <p>Metazoa of Singapore — images &amp; taxonomy</p>
+  </header>
+
+  <!-- QUIZ MODE -->
+  <section id="quiz-mode">
+  <div class="quiz-container">
+
+    <div class="filter-bar">
+      <button class="filter-toggle-btn" onclick="toggleFilters()">
+        <i class="ti ti-filter"></i> Filter by phylum
+        <i class="ti ti-chevron-down" id="filter-chevron"></i>
+      </button>
+      <button class="filter-clear-btn" id="clear-btn" onclick="clearFilters()" style="display:none">
+        Clear filters
+      </button>
+    </div>
+
+    <div id="filter-panel" style="display:none">
+      <div class="filter-section-label">Quick select</div>
+      <div class="quick-toggles">
+        <button class="quick-btn" onclick="quickSelect('vertebrates', event)">Vertebrates only</button>
+        <button class="quick-btn" onclick="quickSelect('invertebrates', event)">Invertebrates only</button>
+        <button class="quick-btn" onclick="quickSelect('all', event)">All</button>
+      </div>
+      <div class="filter-section-label" style="margin-top: 1rem">Select phyla</div>
+      <div class="phyla-grid" id="phyla-grid"></div>
+    </div>
+
+    <div id="active-filters" class="active-filters"></div>
+
+    <p class="quiz-prompt">What animal is this?</p>
+    <div id="quiz-img-wrap">
+      <img id="quiz-img" src="" alt="Mystery animal" />
+      <div id="quiz-spinner" class="spinner">Loading...</div>
+    </div>
+    <div class="quiz-controls">
+      <button id="reveal-btn" onclick="revealTaxonomy()">Reveal Taxonomy</button>
+      <button onclick="loadQuiz()">Next Animal</button>
+    </div>
+    <div id="quiz-reveal" class="quiz-reveal" style="display:none">
+  <h2 id="q-common"></h2>
+  <em id="q-scientific"></em>
+  <table class="taxonomy quiz-table">
+    <tr><td>Phylum</td><td id="q-phylum"></td></tr>
+    <tr><td>Class</td><td id="q-class"></td></tr>
+    <tr><td>Order</td><td id="q-order"></td></tr>
+    <tr><td>Family</td><td id="q-family"></td></tr>
+    <tr><td>Genus</td><td id="q-genus"></td></tr>
+  </table>
+
+  <div id="q-extras" style="margin-top: 1rem">
+    <div class="extra-block" id="q-habitat-block" style="display:none">
+      <div class="extra-label">Habitat</div>
+      <p class="extra-text" id="q-habitat"></p>
+    </div>
+    <div class="extra-block" id="q-feeding-block" style="display:none">
+      <div class="extra-label">Feeding</div>
+      <p class="extra-text" id="q-feeding"></p>
+    </div>
+  </div>
+
+  <a id="q-wiki" href="#" target="_blank"></a>
+</div>
+
+  </div>
+</section>
+
+  <script>
+    const PHYLA = [
+  { name: "Chordata",        vertebrate: true  },
+  { name: "Arthropoda",      vertebrate: false },
+  { name: "Mollusca",        vertebrate: false },
+  { name: "Annelida",        vertebrate: false },
+  { name: "Echinodermata",   vertebrate: false },
+  { name: "Platyhelminthes", vertebrate: false },
+  { name: "Nematoda",        vertebrate: false },
+  { name: "Porifera",        vertebrate: false },
+  { name: "Cnidaria",        vertebrate: false },
+  { name: "Bryozoa",         vertebrate: false },
+  { name: "Nemertea",        vertebrate: false },
+  { name: "Sipuncula",       vertebrate: false },
+  { name: "Xenacoelomorpha", vertebrate: false },
+];
+
+let selectedPhyla = new Set();
+let filterOpen = false;
+
+function buildPhylaGrid() {
+  const grid = document.getElementById("phyla-grid");
+  grid.innerHTML = "";
+  PHYLA.forEach(p => {
+    const label = document.createElement("label");
+    label.className = "phylum-item";
+    label.innerHTML = `
+      <input type="checkbox" value="${p.name}" onchange="onPhylumToggle(this)" />
+      <span class="phylum-name">${p.name}</span>
+      <span class="phylum-type ${p.vertebrate ? 'vertebrate' : 'invertebrate'}">
+        ${p.vertebrate ? 'vertebrate' : 'invertebrate'}
+      </span>`;
+    grid.appendChild(label);
+  });
+}
+
+function onPhylumToggle(cb) {
+  if (cb.checked) selectedPhyla.add(cb.value);
+  else            selectedPhyla.delete(cb.value);
+  updateClearBtn();
+  updateChips();
+}
+
+function toggleFilters() {
+  filterOpen = !filterOpen;
+  document.getElementById("filter-panel").style.display = filterOpen ? "block" : "none";
+  document.getElementById("filter-chevron").className =
+    filterOpen ? "ti ti-chevron-up" : "ti ti-chevron-down";
+}
+
+function quickSelect(mode, event) {
+  selectedPhyla.clear();
+  if (mode === "vertebrates") {
+    PHYLA.filter(p =>  p.vertebrate).forEach(p => selectedPhyla.add(p.name));
+  } else if (mode === "invertebrates") {
+    PHYLA.filter(p => !p.vertebrate).forEach(p => selectedPhyla.add(p.name));
+  }
+  document.querySelectorAll("#phyla-grid input[type=checkbox]").forEach(cb => {
+    cb.checked = selectedPhyla.has(cb.value);
+  });
+  document.querySelectorAll(".quick-btn").forEach(b => b.classList.remove("active"));
+  event.target.classList.add("active");
+  updateClearBtn();
+  updateChips();
+}
+
+function clearFilters() {
+  selectedPhyla.clear();
+  document.querySelectorAll("#phyla-grid input[type=checkbox]").forEach(cb => cb.checked = false);
+  document.querySelectorAll(".quick-btn").forEach(b => b.classList.remove("active"));
+  updateClearBtn();
+  updateChips();
+}
+
+function updateClearBtn() {
+  document.getElementById("clear-btn").style.display =
+    selectedPhyla.size > 0 ? "inline-block" : "none";
+}
+
+function updateChips() {
+  const container = document.getElementById("active-filters");
+  container.innerHTML = "";
+  selectedPhyla.forEach(name => {
+    const chip = document.createElement("div");
+    chip.className = "filter-chip";
+    chip.innerHTML = `${name} <button onclick="removePhylum('${name}')" title="Remove">×</button>`;
+    container.appendChild(chip);
+  });
+}
+
+function removePhylum(name) {
+  selectedPhyla.delete(name);
+  const cb = document.querySelector(`#phyla-grid input[value="${name}"]`);
+  if (cb) cb.checked = false;
+  updateClearBtn();
+  updateChips();
+}
+
+// ── QUIZ ────────────────────────────────────────
+let quizData = null;
+
+async function loadQuiz() {
+  const img     = document.getElementById("quiz-img");
+  const spinner = document.getElementById("quiz-spinner");
+  const reveal  = document.getElementById("quiz-reveal");
+  const btn     = document.getElementById("reveal-btn");
+
+  img.style.display     = "none";
+  spinner.style.display = "block";
+  spinner.textContent   = "Loading...";
+  reveal.style.display  = "none";
+  btn.disabled          = false;
+
+  // Pass selected phyla to the backend
+  const phylaParam = selectedPhyla.size > 0
+    ? "&phyla=" + encodeURIComponent([...selectedPhyla].join(","))
+    : "";
+
+  const res = await fetch("/api/random?" + phylaParam);
+  quizData  = await res.json();
+
+  if (quizData.error) {
+    spinner.textContent = "No animals found for selected filters — try broadening your selection.";
+    return;
+  }
+
+  img.src = quizData.image_url || "";
+  img.onload  = () => { spinner.style.display = "none"; img.style.display = "block"; };
+  img.onerror = () => { spinner.textContent = "No image available"; };
+}
+
+function revealTaxonomy() {
+  if (!quizData) return;
+  document.getElementById("q-common").textContent     = quizData.common_name;
+  document.getElementById("q-scientific").textContent = quizData.scientific_name;
+  document.getElementById("q-phylum").textContent     = quizData.phylum;
+  document.getElementById("q-class").textContent      = quizData.class_;
+  document.getElementById("q-order").textContent      = quizData.order_;
+  document.getElementById("q-family").textContent     = quizData.family;
+  document.getElementById("q-genus").textContent      = quizData.genus;
+
+  // Habitat
+  const habitatBlock = document.getElementById("q-habitat-block");
+  if (quizData.habitat) {
+    document.getElementById("q-habitat").textContent = quizData.habitat;
+    habitatBlock.style.display = "block";
+  } else {
+    habitatBlock.style.display = "none";
+  }
+
+  // Feeding
+  const feedingBlock = document.getElementById("q-feeding-block");
+  if (quizData.feeding) {
+    document.getElementById("q-feeding").textContent = quizData.feeding;
+    feedingBlock.style.display = "block";
+  } else {
+    feedingBlock.style.display = "none";
+  }
+
+  const wikiEl = document.getElementById("q-wiki");
+  if (quizData.wikipedia_url) {
+    wikiEl.href        = quizData.wikipedia_url;
+    wikiEl.textContent = "Read on Wikipedia →";
+    wikiEl.style.display = "inline";
+  } else {
+    wikiEl.style.display = "none";
+  }
+  document.getElementById("quiz-reveal").style.display = "block";
+  document.getElementById("reveal-btn").disabled = true;
+}
+
+buildPhylaGrid();
+loadQuiz();
+  </script>
+</body>
+</html>

@@ -1,0 +1,410 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', 'Segoe UI', sans-serif;
+  background: #f7f3ec;
+  color: #2c2c2c;
+}
+
+/* ── HEADER ── */
+header {
+  background: #1c3a28;
+  padding: 2rem 2.5rem 1.5rem;
+}
+header h1 {
+  font-family: Georgia, serif;
+  font-size: 2rem;
+  color: #e8f0e0;
+  font-weight: 500;
+  margin-bottom: 0.2rem;
+}
+header p {
+  font-size: 13px;
+  color: #7ab896;
+  margin-bottom: 1.25rem;
+}
+
+/* ── MODE TABS ── */
+.mode-toggle {
+  display: flex;
+  gap: 0;
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 8px;
+  width: fit-content;
+  overflow: hidden;
+}
+.mode-toggle button {
+  padding: 7px 22px;
+  font-size: 13px;
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.45);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.mode-toggle button.active {
+  background: rgba(255,255,255,0.12);
+  color: #e8f0e0;
+  font-weight: 500;
+}
+
+/* ── SEARCH ROW ── */
+.search-row {
+  display: flex;
+  gap: 10px;
+  padding: 1.25rem 2.5rem 0.75rem;
+  background: #f7f3ec;
+}
+.search-row input {
+  flex: 1;
+  height: 38px;
+  border: 1px solid #d4c9b8;
+  border-radius: 6px;
+  background: white;
+  padding: 0 14px;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+}
+.search-row button {
+  height: 38px;
+  padding: 0 20px;
+  background: #1c3a28;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+/* ── FILTER BAR ── */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 2.5rem 0.75rem;
+  background: #f7f3ec;
+}
+.filter-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: white;
+  border: 1px solid #d4c9b8;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  color: #3a3028;
+  transition: background 0.15s;
+}
+.filter-toggle-btn:hover { background: #f0ebe3; }
+.filter-toggle-btn i { font-size: 15px; }
+.filter-clear-btn {
+  padding: 6px 12px;
+  background: transparent;
+  border: 1px solid #e08060;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #c05030;
+  cursor: pointer;
+  font-family: inherit;
+}
+.filter-clear-btn:hover { background: #fdf0ec; }
+
+/* ── FILTER PANEL ── */
+#filter-panel {
+  margin: 0 2.5rem 1rem;
+  background: white;
+  border: 1px solid #e2d9cc;
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+  animation: slideDown 0.18s ease;
+}
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.filter-section-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #a09080;
+  font-weight: 500;
+  margin-bottom: 0.6rem;
+}
+.quick-toggles {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.quick-btn {
+  padding: 5px 14px;
+  border: 1px solid #c8d8c0;
+  border-radius: 20px;
+  background: white;
+  font-size: 12px;
+  font-family: inherit;
+  color: #2c4a38;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.quick-btn:hover,
+.quick-btn.active {
+  background: #1c3a28;
+  color: white;
+  border-color: #1c3a28;
+}
+
+/* ── PHYLA CHECKBOXES ── */
+.phyla-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 6px 16px;
+}
+.phylum-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.phylum-item:hover { background: #f7f3ec; }
+.phylum-item input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  accent-color: #1c3a28;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.phylum-name {
+  font-size: 13px;
+  font-style: italic;
+  color: #2c2c2c;
+  user-select: none;
+}
+.phylum-type {
+  font-size: 10px;
+  padding: 1px 7px;
+  border-radius: 10px;
+  margin-left: auto;
+  font-style: normal;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+.phylum-type.vertebrate {
+  background: #e0f0e8;
+  color: #2a6040;
+}
+.phylum-type.invertebrate {
+  background: #f0e8d8;
+  color: #7a4820;
+}
+
+/* ── ACTIVE FILTER CHIPS ── */
+.active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0 2.5rem 0.75rem;
+}
+.filter-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  background: #1c3a28;
+  color: #c8e8d0;
+  border-radius: 20px;
+  font-size: 12px;
+  font-style: italic;
+}
+.filter-chip button {
+  background: none;
+  border: none;
+  color: #7ab896;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  padding: 0;
+}
+
+/* ── STATS ── */
+#stats {
+  padding: 0 2.5rem 0.5rem;
+  font-size: 12px;
+  color: #8a7f70;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* ── GRID ── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 14px;
+  padding: 0 2.5rem 2rem;
+}
+
+/* ── CARDS ── */
+.card {
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #e8e0d4;
+}
+.card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  display: block;
+  background: #d5e8d4;
+}
+.card-body { padding: 10px 12px 12px; }
+.card-body h3 {
+  font-family: Georgia, serif;
+  font-size: 14px;
+  color: #1c3a28;
+  font-weight: 500;
+  line-height: 1.3;
+}
+.card-body em {
+  display: block;
+  font-size: 11px;
+  color: #9a9080;
+  margin: 2px 0 8px;
+}
+
+.taxonomy { width: 100%; border-collapse: collapse; }
+.taxonomy td {
+  padding: 3px 0;
+  font-size: 11px;
+  border-bottom: 1px solid #f0ebe3;
+}
+.taxonomy td:first-child {
+  font-weight: 500;
+  color: #a09080;
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  width: 44%;
+}
+.taxonomy td:last-child { font-style: italic; color: #3a3028; }
+.card-body a {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 11px;
+  color: #4a7c59;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+/* ── PAGINATION ── */
+#pagination {
+  text-align: center;
+  margin: 0 0 2rem;
+}
+#pagination button {
+  padding: 6px 16px;
+  margin: 0 4px;
+  background: #1c3a28;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+}
+#pagination span { font-size: 13px; color: #7a7060; }
+
+/* ── QUIZ ── */
+.quiz-container {
+  max-width: 520px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  text-align: center;
+}
+.quiz-prompt {
+  font-family: Georgia, serif;
+  font-size: 1.2rem;
+  color: #1c3a28;
+  margin-bottom: 1rem;
+}
+#quiz-img-wrap {
+  height: 340px;
+  background: #d5e8d4;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 1.25rem;
+  border: 1px solid #c8dcc2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+#quiz-img { width: 100%; height: 100%; object-fit: cover; display: none; }
+.spinner { color: #7ab896; font-size: 14px; }
+.quiz-controls { display: flex; gap: 10px; justify-content: center; margin-bottom: 1.5rem; }
+.quiz-controls button {
+  padding: 10px 22px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: inherit;
+}
+#reveal-btn {
+  background: #1c3a28;
+  color: white;
+  font-weight: 500;
+  flex: 1;
+}
+#reveal-btn:disabled { opacity: 0.4; cursor: default; }
+.quiz-controls button:last-child {
+  background: white;
+  color: #1c3a28;
+  border: 1.5px solid #c8d8c0;
+}
+.quiz-reveal {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e2d9cc;
+  padding: 1.5rem;
+  text-align: left;
+  animation: fadeIn 0.3s ease;
+}
+.quiz-reveal h2 { font-family: Georgia, serif; font-size: 1.25rem; color: #1c3a28; font-weight: 500; }
+.quiz-reveal em { display: block; font-size: 13px; color: #9a8f7e; margin-bottom: 1rem; }
+.quiz-table { width: 100%; }
+#q-wiki { display: inline-block; margin-top: 0.75rem; color: #4a7c59; font-size: 12px; font-weight: 500; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.extra-block {
+  margin-bottom: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  background: #f7f3ec;
+  border-left: 3px solid #4a7c59;
+  border-radius: 0 6px 6px 0;
+}
+.extra-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #4a7c59;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+.extra-text {
+  font-size: 12px;
+  color: #3a3028;
+  line-height: 1.6;
+  margin: 0;
+}
