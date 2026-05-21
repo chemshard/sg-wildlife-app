@@ -7,14 +7,19 @@ SINGAPORE_PLACE_ID = 6734
 # Each group maps to its iNaturalist taxon_id.
 # Giving under-represented groups more slots in the wheel.
 TAXON_GROUPS = [
-    {"name": "Echinodermata", "taxon_id": 47549,  "weight": 8},
-    {"name": "Crustacea",     "taxon_id": 85493,  "weight": 6},
+    {"name": "Echinodermata", "taxon_id": 47549,  "weight": 12},
+    {"name": "Platyhelminthes", "taxon_id": 52319,  "weight": 10},
+    {"name": "Onychophora", "taxon_id": 51836,  "weight": 8},
+    {"name": "Porifera",      "taxon_id": 48824,  "weight": 6},
+    {"name": "Crustacea",     "taxon_id": 85493,  "weight": 4},
     {"name": "Mollusca",      "taxon_id": 47115,  "weight": 6},
     {"name": "Arachnida",     "taxon_id": 47119,  "weight": 3},
-    {"name": "Cnidaria",      "taxon_id": 47534,  "weight": 8},
-    {"name": "Annelida",      "taxon_id": 47491,  "weight": 8},
-    {"name": "Insecta",       "taxon_id": 47158,  "weight": 2},  # downweighted
-    {"name": "Chordata",      "taxon_id": 2,      "weight": 2},  # downweighted
+    {"name": "Cnidaria",      "taxon_id": 47534,  "weight": 12},
+    {"name": "Annelida",      "taxon_id": 47491,  "weight": 10},
+    {"name": "Insecta",       "taxon_id": 47158,  "weight": 2},
+    {"name": "Nematoda",       "taxon_id": 54960,  "weight": 8},
+    {"name": "Vertebrata",     "taxon_id": 355675,  "weight": 6},
+    {"name": "Tunicata",      "taxon_id": 130868, "weight": 8},
 ]
 
 def get_taxonomy(taxon_id):
