@@ -2,7 +2,7 @@ import requests
 import random
 import re
 
-SINGAPORE_PLACE_ID = 6734
+SINGAPORE_PLACE_ID = ""
 
 # Each group maps to its iNaturalist taxon_id.
 # Giving under-represented groups more slots in the wheel.
@@ -190,7 +190,7 @@ def get_wikipedia_extras(scientific_name, wikipedia_url=""):
                     "lagoon", "estuary", "depth", "shallow", "benthic",
                 ]
                 feeding_keywords = [
-                    "feed", "diet", "prey", "eat", "carnivore", "herbivore",
+                    "feed", "feeds", "diet", "prey", "eat", "carnivore", "herbivore",
                     "omnivore", "forage", "hunt", "predator", "scavenge",
                     "consume", "filter", "graze", "detritivore", "algae",
                 ]
@@ -201,7 +201,7 @@ def get_wikipedia_extras(scientific_name, wikipedia_url=""):
 
                 if not feeding_text:
                     matched = [s for s in sentences if any(k in s.lower() for k in feeding_keywords)]
-                    feeding_text = " ".join(matched[:2])
+                    feeding_text = " ".join(matched[:2]) if matched else " ".join(sentences[:2])
 
         except Exception:
             pass
@@ -351,7 +351,7 @@ def fetch_random_animal(phyla_filter=None):
         entry = build_observation(obs)
         if not entry:
             continue
-        if phyla_filter and entry["phylum"] not in phyla_filter:
+        if phyla_filter and entry["name"] not in phyla_filter:
             continue
 
         return entry
