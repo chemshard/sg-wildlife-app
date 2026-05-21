@@ -90,14 +90,58 @@ def get_wikipedia_extras(scientific_name, wikipedia_url=""):
         sections = []
 
     # ── STEP 3: match sections by heading ────────────────────────────
-    # Define what headings we look for, in priority order
-    habitat_headings = ["habitat", "habitat and range", "distribution and habitat",
-                        "ecology", "ecology and habitat", "distribution"]
-    feeding_headings = ["feeding", "diet", "feeding and diet", "food",
-                        "feeding behaviour", "feeding behavior", "predation"]
+    # Ordered from most-specific to least-specific.
+    # The code will prefer an exact match higher up the preference list
+    # over whatever appears first in the Wikipedia section order.
+    habitat_preference = [
+        "habitat",
+        "habitat and range",
+        "ecology and habitat",
+        "habitat and ecology",
+        "ecology",
+        "distribution and habitat",
+        "habitat and distribution",
+        "distribution",
+        "range",
+        "range and habitat",
+    ]
+    feeding_preference = [
+        "feeding",
+        "diet",
+        "feeding and diet",
+        "diet and feeding",
+        "feeding behaviour",
+        "feeding behavior",
+        "food",
+        "predation",
+        "foraging",
+    ]
 
-    habitat_index = None
-    feeding_index = None
+    def best_section_index(sections, preference_list):
+        """
+        Score every section against the preference list.
+        Lower index in preference_list = higher priority.
+        Returns the section index string of the best match, or None.
+        """
+        best_priority = None
+        best_index    = None
+
+        for sec in sections:
+            heading  = sec.get("line",   "").lower().strip()
+            anchor   = sec.get("anchor", "").lower().strip()
+
+            for priority, pref in enumerate(preference_list):
+                # Only accept if it's an exact match on heading or anchor
+                if pref == heading or pref == anchor:
+                    if best_priority is None or priority < best_priority:
+                        best_priority = priority
+                        best_index    = sec.get("index")
+                    break   # no need to check lower priorities for this section
+
+        return best_index
+
+    habitat_index = best_section_index(sections, habitat_preference)
+    feeding_index = best_section_index(sections, feeding_preference)
 
     for sec in sections:
         heading = sec.get("line", "").lower().strip()
