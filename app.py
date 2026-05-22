@@ -1,7 +1,16 @@
 from flask import Flask, render_template, request, jsonify
 from scraper import fetch_singapore_animals, fetch_random_animal
+import os
 
 app = Flask(__name__)
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(
+        os.path.join(app.root_path, 'static'),
+        'favicon.svg',
+        mimetype='image/svg+xml'
+    )
 
 @app.route("/")
 def index():
