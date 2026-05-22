@@ -4,6 +4,10 @@ import os
 
 app = Flask(__name__)
 
+@app.route("/")
+def index():
+    return render_template("index.html")
+
 @app.route('/favicon.ico')
 def favicon():
     return send_from_directory(
@@ -11,10 +15,6 @@ def favicon():
         'favicon.svg',
         mimetype='image/svg+xml'
     )
-
-@app.route("/")
-def index():
-    return render_template("index.html")
 
 @app.route("/api/animals")
 def animals():
