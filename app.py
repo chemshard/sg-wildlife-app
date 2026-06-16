@@ -1,9 +1,21 @@
 from flask import Flask, render_template, request, jsonify
 from scraper import fetch_singapore_animals, fetch_random_animal
 import os
+from datetime import datetime
+import time
+import psutil
 
 app = Flask(__name__)
 
+@app.route('/healthz')
+def health_check():
+    return {
+        'status': 'ok',
+        'timestamp': datetime.now().isoformat(),
+        'uptime': time.time() - psutil.boot_time(),
+        'memory': psutil.virtual_memory()._asdict()
+    }
+    
 @app.route("/")
 def index():
     return render_template("index.html")
